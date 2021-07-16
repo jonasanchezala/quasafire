@@ -1,11 +1,14 @@
 package com.meli.challenge.quasarfire.service;
 
-import com.meli.challenge.quasarfire.model.Location;
-import com.meli.challenge.quasarfire.model.SatelliteRequest;
-import com.meli.challenge.quasarfire.model.TopSecretRequest;
-import com.meli.challenge.quasarfire.model.TopSecretResponse;
+import com.meli.challenge.quasarfire.exception.NotEnoughInformationException;
+import com.meli.challenge.quasarfire.model.*;
 import com.meli.challenge.quasarfire.util.SatelliteUtil;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +16,9 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class TopSecretService {
 
+    private static final int NUMBER_OF_SATELLITES = 3;
     private final SatelliteService satelliteService;
+    private Map<String, SatelliteRequest> satellites;
 
     public TopSecretResponse topSecret(final TopSecretRequest topSecretRequest) {
         return TopSecretResponse.builder()
@@ -42,5 +47,30 @@ public class TopSecretService {
                         .stream()
                         .map(satellite -> satellite.getMessage().toArray(String[]::new))
                         .toArray(String[][]::new));
+    }
+
+    public void topSecretSplit(String satelliteName, TopSecretSplitRequest topSecretSplitRequest) {
+        satellites.put(satelliteName,
+                SatelliteRequest
+                        .builder()
+                        .name(satelliteName)
+                        .distance(topSecretSplitRequest.getDistance())
+                        .message(topSecretSplitRequest.getMessage())
+                        .build()
+        );
+    }
+
+    public void deleteTopSecretSplit() {
+        satellites.clear();
+    }
+
+    public TopSecretResponse getTopSecretSplit() {
+        if(satellites.isEmpty() || satellites.size() < NUMBER_OF_SATELLITES){
+            throw new NotEnoughInformationException("Not enough information for calculate location");
+        }
+        return topSecret(TopSecretRequest
+                .builder()
+                .satellites(satellites.values().stream().collect(Collectors.toList()))
+                .build());
     }
 }
