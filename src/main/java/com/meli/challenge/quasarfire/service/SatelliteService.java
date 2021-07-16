@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class SatelliteService {
 
-    public Location getLocation(double... distances){
+    public Location getLocation(final double... distances){
         List<Satellite> satellites = SatelliteUtil.getSatellites();
         return SatelliteUtil.getLocationByTrilateration(
                 satellites.stream()
@@ -25,7 +25,7 @@ public class SatelliteService {
                         .toArray(double[][]::new), distances);
     }
 
-    public String getMessage(String[]... messages){
+    public String getMessage(final String[]... messages){
         Map<Integer,String> messageCompleted = new HashMap<>();
         IntStream.range(0, messages[0].length)
             .forEach(column ->
