@@ -2,7 +2,7 @@
 
 El ejercicio se desarrollo en Spring Boot y se utilizo la libreria [lemmingapex](https://github.com/lemmingapex/trilateration) para el calculo de la triangulacion.
 
-La aplicacion ha sido desplegada en Heroku con la siguiente ruta https://limitless-cove-99086.herokuapp.com/health y expone los siguientes servicios rest.
+La aplicacion ha sido desplegada en Heroku con la siguiente ruta https://limitless-cove-99086.herokuapp.com/healthcheck y expone los siguientes servicios rest.
 
 Servicio TopSecret.
 
